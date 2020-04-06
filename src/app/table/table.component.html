@@ -1,0 +1,31 @@
+<p-table [value]="dataSource" *ngIf="!loading">
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngFor="let header of uniqueKeys">
+        {{ header }}
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+    <tr>
+      <td pEditableColumn *ngFor="let cell of uniqueKeys;">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [disabled]="cell === 'eventId'" [(ngModel)]="rowData[cell]"
+                   (focus)="cloneRow(rowData)" (focusout)="save(rowData)">
+          </ng-template>
+          <ng-template pTemplate="output">
+            <span *ngIf="!isDate(rowData[cell])">{{ isEmpty(rowData[cell]) ? '-' : rowData[cell] }}</span>
+            <span *ngIf="isDate(rowData[cell])">{{ isEmpty(rowData[cell]) ? '-' : formatDate(rowData[cell]) }}</span>
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <button (click)="deleteRow(ri)"> remove row </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<button (click)="addRow()"> add row </button>
+
